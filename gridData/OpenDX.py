@@ -169,6 +169,10 @@ import gzip
 
 import warnings
 
+global_values_per_line = [3]
+global_float_format = ["f"]
+global_float_precision = []
+
 class DXclass(object):
     """'class' object as defined by OpenDX"""
     def __init__(self,classid):
@@ -391,8 +395,12 @@ class array(DXclass):
         fmt_string = "{:d}"
         if (self.array.dtype.kind == 'f' or self.array.dtype.kind == 'c'):
             precision = numpy.finfo(self.array.dtype).precision
-            fmt_string = "{:."+"{:d}".format(precision)+"f}"
-        values_per_line = 3
+            if len(global_float_precision) != 0:
+                precision = global_float_precision[-1]
+            
+            fmt_string = "{:."+"{:d}".format(precision)+ \
+                    global_float_format[-1]+"}"
+        values_per_line = global_values_per_line[-1]
         values = self.array.flat
         while 1:
             try:
